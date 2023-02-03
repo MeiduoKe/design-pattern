@@ -1,5 +1,8 @@
 package builderpattern;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @ClassName BuilderPattern
  * @Description 建造者模式
@@ -44,4 +47,161 @@ package builderpattern;
  * @Version 1.0
  */
 public class BuilderPattern {
+    public static void main(String[] args) {
+        ResidenceBuilder rb = new ResidenceBuilder();
+        Designer designer1 = new Designer(rb);
+        Building building = designer1.build();
+        building.show();
+        Building highBuilding = designer1.buildHigh();
+        highBuilding.show();
+
+        CountingBuilder cb = new CountingBuilder();
+        Designer designer2 = new Designer(cb);
+        Building count = designer2.build();
+        count.show();
+        Building highCount = designer2.buildHigh();
+        highCount.show();
+    }
+}
+
+/*
+ * 为了容易理解，这次设计一个场景——建设住宅建筑，Builder 为建筑工人抽象，Building 为住宅建筑抽象，Designer 为设计师：
+ * 下面的代码为设计师通过建筑工人建设普通住宅建筑和高层住宅建筑的代码
+ */
+
+/***
+ * @ClassName Building
+ * @Description 住宅建筑抽象
+ * @Author Meiduo Ke
+ * @Date 11:25 11:25
+ */
+interface Building {
+    void addRooms(String room);
+
+    void addFloors(String floor);
+
+    List<String> getRooms();
+
+    List<String> getFloors();
+
+    void show();
+}
+
+/***
+ * @ClassName ResidenceBuilding
+ * @Description 具体住宅建筑
+ * @Author Meiduo Ke
+ * @Date 11:25 11:25
+ */
+class ResidenceBuilding implements Building {
+    List<String> rooms;
+    List<String> floors;
+
+    public ResidenceBuilding() {
+        this.rooms = new ArrayList<>();
+        this.floors = new ArrayList<>();
+    }
+
+    @Override
+    public void addRooms(String room) {
+        this.rooms.add(room);
+    }
+
+    @Override
+    public void addFloors(String floor) {
+        this.floors.add(floor);
+    }
+
+    @Override
+    public List<String> getRooms() {
+        return this.rooms;
+    }
+
+    @Override
+    public List<String> getFloors() {
+        return this.floors;
+    }
+
+    @Override
+    public void show() {
+        System.out.println("住宅房间：" + this.rooms.toString() + "；" + "楼层：" + this.floors.toString() + "。");
+    }
+}
+
+/***
+ * @ClassName Builder
+ * @Description 建筑工人抽象
+ * @Author Meiduo Ke
+ * @Date 11:25 11:25
+ */
+interface Builder {
+    public void buildRoom(int n);
+
+    public void buildFloor(int m);
+
+    public Building getResult();
+}
+
+/***
+ * @ClassName ResidenceBuilder
+ * @Description 具体的住宅建筑工人
+ * @Author Meiduo Ke
+ * @Date 11:25 11:25
+ */
+class ResidenceBuilder implements Builder {
+
+    private Building building;
+
+    public ResidenceBuilder() {
+        this.building = new ResidenceBuilding();
+    }
+
+    @Override
+    public void buildRoom(int n) {
+        building.addRooms(n + "号房间");
+    }
+
+    @Override
+    public void buildFloor(int m) {
+        building.addFloors(m + "层");
+    }
+
+    @Override
+    public Building getResult() {
+        return building;
+    }
+}
+
+/***
+ * @ClassName Designer
+ * @Description 设计师
+ * @Author Meiduo Ke
+ * @Date 11:25 11:25
+ */
+class Designer {
+    private Builder builder;
+
+    public Designer(Builder builder) {
+        this.builder = builder;
+    }
+
+    public Building build() {
+        builder.buildRoom(1);
+        builder.buildRoom(2);
+        builder.buildRoom(3);
+        builder.buildRoom(4);
+        builder.buildFloor(1);
+        builder.buildFloor(2);
+        return builder.getResult();
+    }
+
+    public Building buildHigh() {
+        for (int i = 1; i <= 100; i++) {
+            builder.buildRoom(i);
+            if (i % 10 == 0) {
+                builder.buildFloor(i / 10);
+            }
+        }
+        return builder.getResult();
+    }
 }
