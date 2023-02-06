@@ -135,11 +135,11 @@ class ResidenceBuilding implements Building {
  * @Date 11:25 11:25
  */
 interface Builder {
-    public void buildRoom(int n);
+    void buildRoom(int n);
 
-    public void buildFloor(int m);
+    void buildFloor(int m);
 
-    public Building getResult();
+    Building getResult();
 }
 
 /***
